@@ -7,7 +7,7 @@ public:
 	Reversi();
 	~Reversi();
 	void Draw();
-	bool CapPut(int x, int y);
+	bool CanPut(int x, int y);
 	void Put(int x, int y, int color);
 
 private:

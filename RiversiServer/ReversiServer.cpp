@@ -1,20 +1,65 @@
-﻿// RiversiServer.cpp : このファイルには 'main' 関数が含まれています。プログラム実行の開始と終了がそこで行われます。
-//
+﻿#include <DxLib.h>  
+#include <winsock2.h>  
+#include "Reversi.h"  
 
-#include <iostream>
+#pragma comment(lib,"ws2_32.lib")  
 
-int main()
+int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 {
-    std::cout << "Hello World!\n";
+	ChangeWindowMode(TRUE);
+	DxLib_Init();
+
+	// WinSockの初期化  
+	WSADATA wsa;
+	WSAStartup(MAKEWORD(2, 2), &wsa);
+
+	SOCKET server = socket(AF_INET, SOCK_STREAM, 0);
+
+	sockaddr_in addr{};
+	addr.sin_family = AF_INET;
+	addr.sin_port = htons(12345);
+	addr.sin_addr.S_un.S_addr = INADDR_ANY;
+
+	bind(server, (sockaddr*)&addr, sizeof(addr));
+	listen(server, 1);
+
+	sockaddr_in clientAddr;
+	int clientAddrSize = sizeof(clientAddr);
+	SOCKET client = accept(server, (sockaddr*)&clientAddr, &clientAddrSize);
+
+	Reversi game;
+
+	
+	while (ProcessMessage() == 0)
+	{
+		game.Draw();
+
+		int mx, my;
+		GetMousePoint(&mx, &my);
+
+		int x = (mx - 50) / 60;
+		int y = (my - 50) / 60;
+
+		if (game.CanPut(x, y))
+		{
+			game.Put(x, y, 1);
+
+			char buf[16];
+			sprintf_s(buf, "%d,%d", x, y);
+			send(client, buf, strlen(buf) + 1, 0);
+
+			recv(client, buf, sizeof(buf), 0);
+			sscanf_s(buf, "%d,%d", &x, &y);
+			game.Put(x, y, 2);
+
+		}
+		
+    }
+
+   closesocket(client);  
+   closesocket(server);  
+   WSACleanup();  
+   DxLib_End();
+
+   return 0;  
 }
-
-// プログラムの実行: Ctrl + F5 または [デバッグ] > [デバッグなしで開始] メニュー
-// プログラムのデバッグ: F5 または [デバッグ] > [デバッグの開始] メニュー
-
-// 作業を開始するためのヒント: 
-//    1. ソリューション エクスプローラー ウィンドウを使用してファイルを追加/管理します 
-//   2. チーム エクスプローラー ウィンドウを使用してソース管理に接続します
-//   3. 出力ウィンドウを使用して、ビルド出力とその他のメッセージを表示します
-//   4. エラー一覧ウィンドウを使用してエラーを表示します
-//   5. [プロジェクト] > [新しい項目の追加] と移動して新しいコード ファイルを作成するか、[プロジェクト] > [既存の項目の追加] と移動して既存のコード ファイルをプロジェクトに追加します
-//   6. 後ほどこのプロジェクトを再び開く場合、[ファイル] > [開く] > [プロジェクト] と移動して .sln ファイルを選択します

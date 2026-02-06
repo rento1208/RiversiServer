@@ -55,7 +55,7 @@ void Reversi::Draw()
 	ScreenFlip();
 }
 
-bool Reversi::CapPut(int x, int y)
+bool Reversi::CanPut(int x, int y)
 {
     
 	return(x >= 0 && x < 8 && y >= 0 && y < 8 && board[y][x] == 0);
