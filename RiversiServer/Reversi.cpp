@@ -25,9 +25,9 @@ Reversi::~Reversi()
 void Reversi::Draw()
 {
 	ClearDrawScreen();
-	int brack = GetColor(0, 0, 0);
-	int white = GetColor(255, 255, 255);
-	int green = GetColor(0, 128, 0);
+	int Brack = GetColor(0, 0, 0);
+	int White = GetColor(255, 255, 255);
+	int Green = GetColor(0, 128, 0);
 
 	for (int y = 0; y < 8; y++)
 	{
@@ -37,17 +37,17 @@ void Reversi::Draw()
 			int drawY = Offset + y * CellSize;
 
 			// ƒ}ƒX–Ú‚Ì•`‰æ
-			DrawBox(drawX, drawY, drawX + CellSize, drawY + CellSize, green, TRUE);
-			DrawBox(drawX, drawY, drawX + CellSize, drawY + CellSize,brack, FALSE);
+			DrawBox(drawX, drawY, drawX + CellSize, drawY + CellSize, Green, TRUE);
+			DrawBox(drawX, drawY, drawX + CellSize, drawY + CellSize,Brack, FALSE);
 
 			// Î‚Ì•`‰æ
 			if (board[y][x] == 1)
 			{
-				DrawCircle(drawX + CellSize / 2, drawY + CellSize / 2, CellSize / 2 - 5, white, TRUE);
+				DrawCircle(drawX + CellSize / 2, drawY + CellSize / 2, CellSize / 2 - 5, White, TRUE);
 			}
 			if (board[y][x] == 2)
 			{
-				DrawCircle(drawX + CellSize / 2, drawY + CellSize / 2, CellSize / 2 - 5, brack, TRUE);
+				DrawCircle(drawX + CellSize / 2, drawY + CellSize / 2, CellSize / 2 - 5, Brack, TRUE);
 			}
 		}
 	}
@@ -57,6 +57,7 @@ void Reversi::Draw()
 
 bool Reversi::CapPut(int x, int y)
 {
+    
 	return(x >= 0 && x < 8 && y >= 0 && y < 8 && board[y][x] == 0);
 }
 
